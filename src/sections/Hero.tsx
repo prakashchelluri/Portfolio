@@ -104,14 +104,14 @@ const Hero = () => {
           </a>
           
           <a
-            href="http://www.linkedin.com/in/prakash-chelluri-7a462649"
+            href="http://www.linkedin.com/in/prakashchelluri"
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-center gap-2 px-4 py-2 rounded-md bg-dashboard-panel border border-dashboard-border hover:border-[#0a66c2] transition-all duration-300"
           >
             <Linkedin className="w-4 h-4 text-[#0a66c2]" />
             <span className="font-mono text-sm text-terminal-text group-hover:text-[#0a66c2] transition-colors">
-              curl linkedin.com/in/prakash-chelluri-7a462649
+              curl linkedin.com/in/prakashchelluri
             </span>
           </a>
         </div>

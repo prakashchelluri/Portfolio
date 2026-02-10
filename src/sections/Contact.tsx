@@ -27,7 +27,7 @@ const Contact = () => {
   const contactInfo = [
     { label: 'EMAIL', value: 'prakashchelluri@gmail.com', icon: Mail },
     { label: 'LOCATION', value: 'Hyderabad, India', icon: MapPin },
-    { label: 'LINKEDIN', value: 'linkedin.com/in/prakash-chelluri-7a462649', icon: Linkedin, href: 'http://www.linkedin.com/in/prakash-chelluri-7a462649' },
+    { label: 'LINKEDIN', value: 'linkedin.com/in/prakashchelluri', icon: Linkedin, href: 'http://www.linkedin.com/in/prakashchelluri' },
     { label: 'GITHUB', value: 'github.com/prakashchelluri', icon: Github, href: 'https://github.com/prakashchelluri' },
   ];
 
