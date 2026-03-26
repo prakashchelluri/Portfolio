@@ -29,7 +29,7 @@ const Experience = () => {
     {
       title: 'Senior Site Reliability Engineer',
       company: 'Netcracker Technology Solutions',
-      period: 'May 2020 - Present',
+      period: 'Feb 2022 - Present',
       status: 'running' as const,
       achievements: [
         { metric: '70%', label: 'Automation Improvement', icon: TrendingUp, positive: true },
@@ -48,7 +48,7 @@ const Experience = () => {
     {
       title: 'Senior IT Engineer',
       company: 'Netcracker Technology Solutions',
-      period: 'Jan 2015 - Feb 2020',
+      period: 'Dec 2014 - Feb 2022',
       status: 'completed' as const,
       achievements: [
         { metric: '99.9%', label: 'APAC Uptime', icon: CheckCircle2, positive: true },
