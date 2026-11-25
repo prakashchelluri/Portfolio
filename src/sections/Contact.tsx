@@ -27,7 +27,7 @@ const Contact = () => {
   const contactInfo = [
     { label: 'EMAIL', value: 'prakashchelluri@gmail.com', icon: Mail },
     { label: 'LOCATION', value: 'Hyderabad, India', icon: MapPin },
-    { label: 'LINKEDIN', value: 'linkedin.com/in/prakashchelluri', icon: Linkedin, href: 'http://www.linkedin.com/in/prakashchelluri' },
+    { label: 'LINKEDIN', value: 'linkedin.com/in/prakashchelluri', icon: Linkedin, href: 'https://www.linkedin.com/in/prakashchelluri' },
     { label: 'GITHUB', value: 'github.com/prakashchelluri', icon: Github, href: 'https://github.com/prakashchelluri' },
   ];
 
@@ -56,20 +56,20 @@ const Contact = () => {
             <div className={`space-y-3 transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
               {contactInfo.map((item, index) => (
                 <div key={index} className="flex items-center gap-3">
-                  <span className="text-terminal-muted w-20 text-xs">{item.label}</span>
+                  <span className="text-terminal-muted w-20 shrink-0 text-xs">{item.label}</span>
                   <span className="text-terminal-text">=</span>
                   {item.href ? (
                     <a 
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-neon-cyan hover:underline ml-2 text-sm flex items-center gap-1"
+                      className="text-neon-cyan hover:underline ml-2 text-sm flex items-center gap-1 min-w-0 break-all"
                     >
                       "{item.value}"
                       <item.icon className="w-3 h-3" />
                     </a>
                   ) : (
-                    <span className="text-terminal-text ml-2 text-sm flex items-center gap-1">
+                    <span className="text-terminal-text ml-2 text-sm flex items-center gap-1 min-w-0 break-all">
                       "{item.value}"
                       <item.icon className="w-3 h-3 text-terminal-muted" />
                     </span>
@@ -77,7 +77,7 @@ const Contact = () => {
                 </div>
               ))}
               <div className="flex items-center gap-3 pt-2 border-t border-terminal-border">
-                <span className="text-terminal-muted w-20 text-xs">STATUS</span>
+                <span className="text-terminal-muted w-20 shrink-0 text-xs">STATUS</span>
                 <span className="text-terminal-text">=</span>
                 <span className="text-neon-green ml-2 text-sm flex items-center gap-2">
                   "Available for opportunities"

@@ -2,19 +2,19 @@ import { useState, useEffect } from 'react';
 import Terminal from '@/components/Terminal';
 import { Github, Linkedin, Mail, Terminal as TerminalIcon } from 'lucide-react';
 
+const terminalLines = [
+  { text: 'whoami', delay: 800, highlight: true },
+  { text: '', delay: 500, output: true },
+  { text: 'NAME: Satya Prakash Chelluri', delay: 100, output: true, noPrompt: true },
+  { text: 'ROLE: Site Reliability Engineer', delay: 100, output: true, noPrompt: true },
+  { text: 'SPECIALIZATION: Kubernetes | OpenShift | CI/CD | Observability | AIOps', delay: 100, output: true, noPrompt: true, cyan: true },
+  { text: 'EXPERIENCE: 10+ years', delay: 100, output: true, noPrompt: true },
+  { text: 'LOCATION: Hyderabad, India', delay: 100, output: true, noPrompt: true },
+  { text: 'STATUS: Available for opportunities', delay: 100, output: true, noPrompt: true, success: true },
+];
+
 const Hero = () => {
   const [lineIndex, setLineIndex] = useState(0);
-
-  const terminalLines = [
-    { text: 'whoami', delay: 800, highlight: true },
-    { text: '', delay: 500, output: true },
-    { text: 'NAME: Satya Prakash Chelluri', delay: 100, output: true, noPrompt: true },
-    { text: 'ROLE: Site Reliability Engineer', delay: 100, output: true, noPrompt: true },
-    { text: 'SPECIALIZATION: Kubernetes | DevOps | Observability | Automation', delay: 100, output: true, noPrompt: true, cyan: true },
-    { text: 'EXPERIENCE: 10+ years', delay: 100, output: true, noPrompt: true },
-    { text: 'LOCATION: Hyderabad, India', delay: 100, output: true, noPrompt: true },
-    { text: 'STATUS: Available for opportunities', delay: 100, output: true, noPrompt: true, success: true },
-  ];
 
   useEffect(() => {
     if (lineIndex < terminalLines.length) {
@@ -87,7 +87,7 @@ const Hero = () => {
           >
             <Mail className="w-4 h-4 text-neon-cyan" />
             <span className="font-mono text-sm text-terminal-text group-hover:text-neon-cyan transition-colors">
-              ssh contact@prakashchelluri.dev
+              ./contact.sh
             </span>
           </button>
           
@@ -104,7 +104,7 @@ const Hero = () => {
           </a>
           
           <a
-            href="http://www.linkedin.com/in/prakashchelluri"
+            href="https://www.linkedin.com/in/prakashchelluri"
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-center gap-2 px-4 py-2 rounded-md bg-dashboard-panel border border-dashboard-border hover:border-[#0a66c2] transition-all duration-300"

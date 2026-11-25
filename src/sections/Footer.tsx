@@ -28,8 +28,8 @@ const Footer = () => {
           </div>
 
           {/* Right - Quick Links */}
-          <div className="flex items-center gap-4">
-            {['hero', 'about', 'skills', 'experience', 'contact'].map((section) => (
+          <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2">
+            {['pipeline', 'about', 'skills', 'experience', 'projects', 'contact'].map((section) => (
               <button
                 key={section}
                 onClick={() => scrollToSection(section)}
@@ -46,14 +46,6 @@ const Footer = () => {
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-neon-green animate-pulse-glow" />
             <span>System Operational</span>
-          </div>
-          <span className="hidden md:inline">|</span>
-          <div className="flex items-center gap-2">
-            <span>Latency: &lt;50ms</span>
-          </div>
-          <span className="hidden md:inline">|</span>
-          <div className="flex items-center gap-2">
-            <span>Uptime: 99.9%</span>
           </div>
         </div>
       </div>

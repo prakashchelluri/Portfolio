@@ -1,27 +1,31 @@
 import { useEffect, useState, useRef } from 'react';
 import GridBackground from '@/components/GridBackground';
 import Hero from '@/sections/Hero';
+import PipelineDemo from '@/sections/PipelineDemo';
 import About from '@/sections/About';
 import Skills from '@/sections/Skills';
 import Experience from '@/sections/Experience';
 import Projects from '@/sections/Projects';
 import Contact from '@/sections/Contact';
 import Footer from '@/sections/Footer';
+import { Menu, X } from 'lucide-react';
 import './App.css';
+
+const navLinks = [
+  { id: 'hero', label: '~' },
+  { id: 'pipeline', label: 'pipeline' },
+  { id: 'about', label: 'about' },
+  { id: 'skills', label: 'skills' },
+  { id: 'experience', label: 'experience' },
+  { id: 'projects', label: 'projects' },
+  { id: 'contact', label: 'contact' },
+];
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const navRef = useRef<HTMLElement>(null);
-
-  const navLinks = [
-    { id: 'hero', label: '~' },
-    { id: 'about', label: 'about' },
-    { id: 'skills', label: 'skills' },
-    { id: 'experience', label: 'experience' },
-    { id: 'projects', label: 'projects' },
-    { id: 'contact', label: 'contact' },
-  ];
 
   // Handle scroll for navbar visibility
   useEffect(() => {
@@ -60,6 +64,7 @@ function App() {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+    setMenuOpen(false);
   };
 
   return (
@@ -71,7 +76,7 @@ function App() {
       <nav
         ref={navRef}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
+          isScrolled || menuOpen
             ? 'bg-dashboard-bg/90 backdrop-blur-md border-b border-dashboard-border'
             : 'bg-transparent'
         }`}
@@ -105,17 +110,43 @@ function App() {
             </div>
 
             {/* Status Indicator */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <div className="w-2 h-2 rounded-full bg-neon-green animate-pulse-glow" />
               <span className="text-xs text-terminal-muted hidden sm:inline">online</span>
+              <button
+                type="button"
+                onClick={() => setMenuOpen((o) => !o)}
+                aria-expanded={menuOpen}
+                aria-controls="mobile-nav"
+                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+                className="md:hidden p-1 text-terminal-muted hover:text-neon-cyan"
+              >
+                {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
             </div>
           </div>
+          {menuOpen && (
+            <div id="mobile-nav" className="md:hidden pb-3 grid grid-cols-2 gap-1">
+              {navLinks.map((link) => (
+                <button
+                  key={link.id}
+                  onClick={() => scrollToSection(link.id)}
+                  className={`px-3 py-2 rounded text-left font-mono text-sm ${
+                    activeSection === link.id ? 'text-neon-cyan bg-neon-cyan/10' : 'text-terminal-muted'
+                  }`}
+                >
+                  {link.id === 'hero' ? 'home' : link.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </nav>
 
       {/* Main Content */}
       <main className="relative z-10">
         <Hero />
+        <PipelineDemo />
         <About />
         <Skills />
         <Experience />
