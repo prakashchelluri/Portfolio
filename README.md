@@ -2,7 +2,7 @@
 
 Personal site of a Site Reliability Engineer, built with React, TypeScript, Vite and Tailwind CSS and deployed on Vercel.
 
-The centrepiece is a hands-on pipeline demo (`src/sections/PipelineDemo.tsx`): visitors push a commit through security gates and a GitOps rollout, then kill pods, drain nodes and spike traffic. It runs entirely in the browser.
+The centrepiece is an incident demo (`src/sections/IncidentDemo.tsx`): visitors pick a real-world problem (buggy update, server crash, traffic rush, leaked password, mystery slowdown) and watch it hit the same store with and without SRE safeguards, in plain English with an optional engineer view. It runs entirely in the browser.
 
 ```sh
 npm ci

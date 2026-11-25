@@ -1,159 +1,120 @@
-import { useEffect, useState, useRef } from 'react';
-import GridBackground from '@/components/GridBackground';
+import { useEffect, useState } from 'react';
+import { Menu, X } from 'lucide-react';
 import Hero from '@/sections/Hero';
-import PipelineDemo from '@/sections/PipelineDemo';
+import IncidentDemo from '@/sections/IncidentDemo';
 import About from '@/sections/About';
 import Skills from '@/sections/Skills';
 import Experience from '@/sections/Experience';
 import Projects from '@/sections/Projects';
 import Contact from '@/sections/Contact';
 import Footer from '@/sections/Footer';
-import { Menu, X } from 'lucide-react';
-import './App.css';
 
 const navLinks = [
-  { id: 'hero', label: '~' },
-  { id: 'pipeline', label: 'pipeline' },
   { id: 'about', label: 'about' },
-  { id: 'skills', label: 'skills' },
-  { id: 'experience', label: 'experience' },
-  { id: 'projects', label: 'projects' },
+  { id: 'experience', label: 'journey' },
+  { id: 'projects', label: 'work' },
+  { id: 'demo', label: 'demo' },
+  { id: 'skills', label: 'stack' },
   { id: 'contact', label: 'contact' },
 ];
 
 function App() {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('hero');
-  const navRef = useRef<HTMLElement>(null);
+  const [active, setActive] = useState('hero');
 
-  // Handle scroll for navbar visibility
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      setScrolled(window.scrollY > 40);
+      setProgress(max > 0 ? window.scrollY / max : 0);
     };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Setup intersection observer for active section
   useEffect(() => {
-    const sections = navLinks.map((link) => document.getElementById(link.id));
-    
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { threshold: 0.3 }
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: '-45% 0px -50% 0px' }
     );
-
-    sections.forEach((section) => {
-      if (section) observer.observe(section);
+    ['hero', ...navLinks.map((l) => l.id)].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
     });
-
-    return () => observer.disconnect();
+    return () => io.disconnect();
   }, []);
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  const go = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     setMenuOpen(false);
   };
 
+  const pct = Math.round(progress * 100);
+
   return (
-    <div className="min-h-screen bg-dashboard-bg text-terminal-text font-mono relative">
-      {/* Grid Background */}
-      <GridBackground />
+    <div className="min-h-screen relative">
+      <a href="#about" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-3 focus:py-2 focus:bg-neon-green focus:text-dashboard-bg focus:rounded">
+        Skip to content
+      </a>
 
-      {/* Navigation */}
-      <nav
-        ref={navRef}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled || menuOpen
-            ? 'bg-dashboard-bg/90 backdrop-blur-md border-b border-dashboard-border'
-            : 'bg-transparent'
-        }`}
-      >
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="flex items-center justify-between h-14">
-            {/* Logo */}
-            <button
-              onClick={() => scrollToSection('hero')}
-              className="flex items-center gap-2 text-neon-green hover:text-neon-cyan transition-colors"
-            >
-              <span className="font-mono text-sm">$</span>
-              <span className="font-mono text-sm">PrakashChelluri</span>
-            </button>
+      <header className={`fixed top-0 inset-x-0 z-50 transition-colors duration-500 ${
+        scrolled || menuOpen ? 'bg-dashboard-bg/80 backdrop-blur-xl border-b border-dashboard-border' : ''
+      }`}>
+        <div className="absolute bottom-0 left-0 h-px bg-neon-green shadow-[0_0_12px_#b4f04a]" style={{ width: `${pct}%` }} aria-hidden />
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-1">
-              {navLinks.map((link) => (
-                <button
-                  key={link.id}
-                  onClick={() => scrollToSection(link.id)}
-                  className={`px-3 py-1.5 rounded font-mono text-xs transition-all duration-200 ${
-                    activeSection === link.id
-                      ? 'text-neon-cyan bg-neon-cyan/10'
-                      : 'text-terminal-muted hover:text-terminal-text hover:bg-dashboard-panel'
-                  }`}
-                >
-                  {link.label}
-                </button>
-              ))}
-            </div>
+        <nav className="max-w-7xl mx-auto px-5 h-16 flex items-center justify-between font-mono text-xs" aria-label="Main">
+          <button onClick={() => go('hero')} className="flex items-center gap-2 text-terminal-text group">
+            <span className="grid place-items-center w-7 h-7 rounded-md border border-dashboard-border group-hover:border-neon-green transition-colors">
+              <span className="text-neon-green">&gt;_</span>
+            </span>
+            <span className="hidden sm:inline tracking-wide">prakash.chelluri</span>
+          </button>
 
-            {/* Status Indicator */}
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-neon-green animate-pulse-glow" />
-              <span className="text-xs text-terminal-muted hidden sm:inline">online</span>
-              <button
-                type="button"
-                onClick={() => setMenuOpen((o) => !o)}
-                aria-expanded={menuOpen}
-                aria-controls="mobile-nav"
-                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-                className="md:hidden p-1 text-terminal-muted hover:text-neon-cyan"
-              >
-                {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          <div className="hidden md:flex items-center gap-1 p-1 rounded-full border border-dashboard-border bg-dashboard-panel/60">
+            {navLinks.map((l) => (
+              <button key={l.id} onClick={() => go(l.id)} aria-current={active === l.id ? 'true' : undefined}
+                className={`relative px-3.5 py-1.5 rounded-full transition-colors ${
+                  active === l.id ? 'bg-neon-green text-dashboard-bg' : 'text-terminal-muted hover:text-terminal-text'
+                }`}>
+                {l.label}
               </button>
-            </div>
+            ))}
           </div>
-          {menuOpen && (
-            <div id="mobile-nav" className="md:hidden pb-3 grid grid-cols-2 gap-1">
-              {navLinks.map((link) => (
-                <button
-                  key={link.id}
-                  onClick={() => scrollToSection(link.id)}
-                  className={`px-3 py-2 rounded text-left font-mono text-sm ${
-                    activeSection === link.id ? 'text-neon-cyan bg-neon-cyan/10' : 'text-terminal-muted'
-                  }`}
-                >
-                  {link.id === 'hero' ? 'home' : link.label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </nav>
 
-      {/* Main Content */}
-      <main className="relative z-10">
+          <div className="flex items-center gap-3">
+            <button type="button" onClick={() => setMenuOpen((o) => !o)} aria-expanded={menuOpen} aria-controls="mobile-nav"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'} className="md:hidden p-1.5 text-terminal-text">
+              {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+        </nav>
+
+        {menuOpen && (
+          <div id="mobile-nav" className="md:hidden px-5 pb-5 grid grid-cols-2 gap-2 font-mono text-sm">
+            {navLinks.map((l, i) => (
+              <button key={l.id} onClick={() => go(l.id)}
+                className={`text-left px-3 py-3 rounded-lg border ${active === l.id ? 'border-neon-green text-neon-green' : 'border-dashboard-border text-terminal-muted'}`}
+                style={{ animation: `fade-up .4s ${i * 40}ms both` }}>
+                <span className="text-terminal-muted/60 mr-2">0{i + 1}</span>{l.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </header>
+
+      <main>
         <Hero />
-        <PipelineDemo />
         <About />
-        <Skills />
         <Experience />
         <Projects />
+        <IncidentDemo />
+        <Skills />
         <Contact />
-        <Footer />
       </main>
+      <Footer />
     </div>
   );
 }

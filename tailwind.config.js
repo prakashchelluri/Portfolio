@@ -5,6 +5,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
+        sans: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', '"Fira Code"', 'Consolas', 'monospace'],
       },
       colors: {
@@ -42,23 +43,24 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         // Custom terminal/dashboard colors
+        // "Signal" theme: near-black console, lime for healthy/primary, sky for data.
         terminal: {
-          bg: '#0d1117',
-          border: '#30363d',
-          text: '#c9d1d9',
-          muted: '#8b949e',
+          bg: '#080b0f',
+          border: '#1f2731',
+          text: '#e6ebf1',
+          muted: '#8a94a3',
         },
         dashboard: {
-          bg: '#0b0f14',
-          panel: '#111827',
-          border: '#1e293b',
+          bg: '#05070a',
+          panel: '#0b0f14',
+          border: '#18202a',
         },
         neon: {
-          green: '#22c55e',
-          cyan: '#06b6d4',
-          amber: '#f59e0b',
-          red: '#ef4444',
-          purple: '#a855f7',
+          green: '#b4f04a',
+          cyan: '#5cc8ff',
+          amber: '#ffb547',
+          red: '#ff5c5c',
+          purple: '#a78bfa',
         },
       },
       borderRadius: {
@@ -86,12 +88,12 @@ module.exports = {
           "51%,100%": { opacity: "0" },
         },
         "pulse-glow": {
-          "0%,100%": { boxShadow: "0 0 10px rgba(34, 197, 94, 0.3)" },
-          "50%": { boxShadow: "0 0 20px rgba(34, 197, 94, 0.6)" },
+          "0%,100%": { boxShadow: "0 0 8px rgba(180, 240, 74, 0.35)" },
+          "50%": { boxShadow: "0 0 18px rgba(180, 240, 74, 0.7)" },
         },
         "pulse-cyan": {
-          "0%,100%": { boxShadow: "0 0 10px rgba(6, 182, 212, 0.3)" },
-          "50%": { boxShadow: "0 0 20px rgba(6, 182, 212, 0.6)" },
+          "0%,100%": { boxShadow: "0 0 8px rgba(92, 200, 255, 0.3)" },
+          "50%": { boxShadow: "0 0 18px rgba(92, 200, 255, 0.6)" },
         },
         "dash-flow": {
           "0%": { strokeDashoffset: "20" },
