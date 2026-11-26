@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,150 +6,101 @@
 
 @layer base {
   :root {
-    --background: 220 20% 4%;
-    --foreground: 210 40% 98%;
-    --card: 220 15% 8%;
-    --card-foreground: 210 40% 98%;
-    --popover: 220 15% 8%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 160 84% 39%;
-    --primary-foreground: 220 20% 4%;
-    --secondary: 187 94% 43%;
-    --secondary-foreground: 220 20% 4%;
-    --muted: 220 15% 12%;
-    --muted-foreground: 215 20% 55%;
-    --accent: 187 94% 43%;
-    --accent-foreground: 220 20% 4%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 215 20% 18%;
-    --input: 215 20% 18%;
-    --ring: 160 84% 39%;
-    --radius: 0.5rem;
+    --border: 214 22% 13%;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
-  
+
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 4rem;
   }
-  
+
   body {
-    @apply bg-dashboard-bg text-foreground antialiased;
-    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
-    font-size: 14px;
+    @apply bg-dashboard-bg text-terminal-text antialiased font-sans;
+    font-size: 15px;
     line-height: 1.6;
   }
-  
+
+  /* Faint engineering grid behind everything */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(138, 148, 163, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(138, 148, 163, 0.05) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse at 50% 30%, #000 20%, transparent 80%);
+  }
+
   ::selection {
-    background: rgba(6, 182, 212, 0.3);
-    color: #f8fafc;
+    background: rgba(180, 240, 74, 0.3);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid #b4f04a;
+    outline-offset: 2px;
   }
 }
 
-@layer utilities {
-  /* Grid background pattern */
-  .bg-grid {
-    background-image: 
-      linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
-    background-size: 20px 20px;
+@layer components {
+  /* Scroll reveal: a short, subtle fade once an element enters the viewport. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    transition-delay: calc(var(--d, 0) * 50ms);
   }
-  
-  /* Terminal prompt */
-  .terminal-prompt::before {
-    content: '$';
-    color: #22c55e;
-    margin-right: 0.5rem;
-    font-weight: 500;
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
   }
-  
-  /* Glow effects */
-  .glow-green {
-    box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+
+  /* Hero headline lines rise out of this mask once, on page load. */
+  .word-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    padding-bottom: 0.08em;
   }
-  
-  .glow-cyan {
-    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
-  }
-  
-  .glow-amber {
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
-  }
-  
-  /* Status indicators */
-  .status-online {
-    @apply w-2 h-2 rounded-full bg-neon-green animate-pulse-glow;
-  }
-  
-  .status-busy {
-    @apply w-2 h-2 rounded-full bg-neon-amber;
-  }
-  
-  .status-offline {
-    @apply w-2 h-2 rounded-full bg-neon-red;
-  }
-  
-  /* Panel styling */
-  .panel {
-    @apply bg-dashboard-panel border border-dashboard-border rounded-lg;
-  }
-  
-  /* Code/terminal text */
-  .text-terminal {
-    @apply text-terminal-text;
-  }
-  
-  .text-muted {
-    @apply text-terminal-muted;
-  }
-  
-  /* Scrollbar */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: #0b0f14;
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #1e293b;
-    border-radius: 3px;
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #06b6d4;
+  .word-mask > span {
+    display: inline-block;
   }
 }
 
-/* Cursor blink animation for terminal */
-.cursor-blink::after {
-  content: '▋';
-  color: #22c55e;
-  animation: cursor-blink 1s step-end infinite;
+@keyframes rise-in {
+  from { transform: translateY(110%); }
+  to { transform: none; }
 }
 
-/* Hide scrollbar but keep functionality */
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
 }
 
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
+@keyframes draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
 }
 
-/* Reduced motion */
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.6); }
+  to { opacity: 1; transform: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
   }
 }

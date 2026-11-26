@@ -1,186 +1,98 @@
 import { useEffect, useRef, useState } from 'react';
-import Terminal from '@/components/Terminal';
-import { 
-  Server, 
-  Cloud, 
-  Container, 
-  GitBranch, 
-  Settings, 
-  LineChart
-} from 'lucide-react';
+import { SectionHeader, Reveal } from '@/components/Reveal';
+import { useInView, reducedMotion } from '@/lib/motion';
 
-const About = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
+const FACTS: [string, string][] = [
+  ['Role', 'Site Reliability Engineer'],
+  ['Based in', 'Hyderabad, India'],
+  ['Experience', '10+ years in infrastructure'],
+  ['Built', 'Datacenters in Dubai and Abu Dhabi'],
+  ['Focus', 'Kubernetes, OpenShift, CI/CD, observability, AI for ops'],
+  ['Certification', 'CCNA'],
+];
 
+const STATS = [
+  { value: 10, suffix: '+', label: 'years in infrastructure' },
+  { value: 99.9, suffix: '%', label: 'APAC infra uptime', decimals: 1 },
+  { value: 70, suffix: '%', label: 'less manual deployment work' },
+];
+
+const CountUp = ({ value, suffix, decimals = 0 }: { value: number; suffix: string; decimals?: number }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, 0.6);
+  const [n, setN] = useState(0);
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
+    if (!inView || reducedMotion()) return;
+    let raf = 0;
+    const t0 = performance.now();
+    const step = (t: number) => {
+      const p = Math.min(1, (t - t0) / 1600);
+      setN(value * (1 - Math.pow(1 - p, 4)));
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, value]);
+  const shown = inView && reducedMotion() ? value : n;
+  return <span ref={ref} className="tabular-nums">{shown.toFixed(decimals)}{suffix}</span>;
+};
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
+const hl = 'text-neon-green';
 
-    return () => observer.disconnect();
-  }, []);
+const About = () => (
+  <section id="about" className="py-12 md:py-16 px-5">
+    <div className="max-w-7xl mx-auto">
+      <SectionHeader title="About me" />
 
-  const specializations = [
-    { icon: Cloud, label: 'Kubernetes', color: 'text-neon-cyan' },
-    { icon: Container, label: 'OpenShift', color: 'text-neon-green' },
-    { icon: Server, label: 'Linux', color: 'text-neon-amber' },
-    { icon: LineChart, label: 'Observability', color: 'text-neon-purple' },
-    { icon: Settings, label: 'Automation', color: 'text-neon-cyan' },
-    { icon: GitBranch, label: 'CI/CD', color: 'text-neon-green' },
-  ];
+      <div className="grid lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-20 items-start">
+        <div>
+          <Reveal>
+            <p className="text-2xl sm:text-3xl leading-snug font-medium tracking-tight">
+              I have spent <span className={hl}>10+ years</span> in infrastructure. I built{' '}
+              <span className={hl}>datacenters from scratch in Dubai and Abu Dhabi</span>, led office setups in
+              Hyderabad and the UK, and in 2022 moved into site reliability engineering.
+            </p>
+          </Reveal>
+          <Reveal delay={1}>
+            <p className="mt-6 text-lg text-terminal-muted leading-relaxed">
+              Today I run production <span className="text-terminal-text">Kubernetes and OpenShift</span>, automate
+              delivery, design SLOs that mean something, and build AI tools for my team, like a{' '}
+              <span className="text-terminal-text">Webex bot that proposes fixes</span> for the issues assigned to us
+              and learns from its mistakes.
+            </p>
+          </Reveal>
 
-  const expertise = [
-    { name: 'kubernetes', level: 99, years: '10yrs', desc: 'production-grade cluster mgmt' },
-    { name: 'automation', level: 95, years: '10yrs', desc: '70% reduction in manual work' },
-    { name: 'monitoring', level: 90, years: '8yrs', desc: 'prometheus, grafana, elk' },
-    { name: 'reliability', level: 98, years: '10yrs', desc: '99.9% uptime delivery' },
-  ];
-
-  return (
-    <section 
-      ref={sectionRef}
-      id="about" 
-      className="py-20 px-4"
-    >
-      <div className="max-w-5xl mx-auto">
-        {/* Section Label */}
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-8 h-px bg-neon-cyan" />
-          <span className="text-xs font-mono text-neon-cyan uppercase tracking-wider">
-            System Information
-          </span>
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-px bg-dashboard-border rounded-2xl overflow-hidden border border-dashboard-border">
+            {STATS.map((s, i) => (
+              <Reveal key={s.label} delay={i} className="bg-dashboard-bg p-6">
+                <div className="text-5xl font-semibold tracking-tight text-terminal-text">
+                  <CountUp value={s.value} suffix={s.suffix} decimals={s.decimals} />
+                </div>
+                <div className="mt-2 font-mono text-xs text-terminal-muted">{s.label}</div>
+              </Reveal>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Panel - Profile Info */}
-          <Terminal title="cat /etc/profile.d/sre.conf" className="h-full">
-            <div className={`space-y-4 transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-              <div className="space-y-2">
-                <div className="flex">
-                  <span className="text-terminal-muted w-24">NAME</span>
-                  <span className="text-terminal-text">=</span>
-                  <span className="text-neon-cyan ml-2">"Satya Prakash Chelluri"</span>
-                </div>
-                <div className="flex">
-                  <span className="text-terminal-muted w-24">ROLE</span>
-                  <span className="text-terminal-text">=</span>
-                  <span className="text-terminal-text ml-2">"Senior Site Reliability Engineer"</span>
-                </div>
-                <div className="flex">
-                  <span className="text-terminal-muted w-24">LOCATION</span>
-                  <span className="text-terminal-text">=</span>
-                  <span className="text-terminal-text ml-2">"Hyderabad, India"</span>
-                </div>
-                <div className="flex">
-                  <span className="text-terminal-muted w-24">UPTIME</span>
-                  <span className="text-terminal-text">=</span>
-                  <span className="text-neon-green ml-2">"10+ years in infrastructure"</span>
-                </div>
-                <div className="flex">
-                  <span className="text-terminal-muted w-24">STATUS</span>
-                  <span className="text-terminal-text">=</span>
-                  <span className="text-neon-green ml-2">"Available for opportunities"</span>
-                </div>
-              </div>
-
-              <div className="border-t border-terminal-border pt-4 mt-4">
-                <div className="text-terminal-muted mb-2">$ echo $SPECIALIZATIONS</div>
-                <div className="flex flex-wrap gap-2">
-                  {specializations.map((spec, index) => (
-                    <span 
-                      key={index}
-                      className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-dashboard-panel border border-dashboard-border"
-                    >
-                      <spec.icon className={`w-3 h-3 ${spec.color}`} />
-                      <span className="text-xs text-terminal-text">{spec.label}</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
+        <Reveal className="lg:sticky lg:top-24">
+          <div className="rounded-2xl border border-dashboard-border bg-dashboard-panel overflow-hidden">
+            <div className="relative aspect-square overflow-hidden">
+              <img src="/portrait.jpg" alt="Satya Prakash Chelluri" loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover object-[50%_20%]" />
             </div>
-          </Terminal>
-
-          {/* Right Panel - Expertise */}
-          <Terminal title="ps aux | grep expertise" className="h-full">
-            <div className={`space-y-3 transition-opacity duration-500 delay-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-              <div className="grid grid-cols-12 gap-2 text-xs text-terminal-muted mb-2">
-                <span className="col-span-3">PROCESS</span>
-                <span className="col-span-2">CPU%</span>
-                <span className="col-span-2">TIME</span>
-                <span className="col-span-5">COMMAND</span>
-              </div>
-              
-              {expertise.map((item, index) => (
-                <div key={index} className="space-y-1">
-                  <div className="grid grid-cols-12 gap-2 text-sm font-mono">
-                    <span className="col-span-3 text-neon-cyan">{item.name}</span>
-                    <span className="col-span-2 text-neon-green">{item.level}%</span>
-                    <span className="col-span-2 text-terminal-muted">{item.years}</span>
-                    <span className="col-span-5 text-terminal-muted truncate">{item.desc}</span>
-                  </div>
-                  <div className="h-1 bg-dashboard-border rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-neon-green rounded-full transition-all duration-1000 ease-out"
-                      style={{ 
-                        width: isVisible ? `${item.level}%` : '0%',
-                        transitionDelay: `${index * 200 + 500}ms`
-                      }}
-                    />
-                  </div>
+            <dl className="px-5 py-4 divide-y divide-dashboard-border">
+              {FACTS.map(([k, v]) => (
+                <div key={k} className="grid grid-cols-[7rem_1fr] gap-3 py-2 text-sm">
+                  <dt className="text-terminal-muted">{k}</dt>
+                  <dd className="text-terminal-text">{v}</dd>
                 </div>
               ))}
-            </div>
-          </Terminal>
-        </div>
-
-        {/* Summary Panel */}
-        <div className="mt-6">
-          <Terminal title="cat ~/README.md">
-            <div className={`space-y-3 transition-opacity duration-500 delay-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-              <p className="text-terminal-text text-sm leading-relaxed">
-                <span className="text-neon-cyan">#</span> About Me
-              </p>
-              <p className="text-terminal-muted text-sm leading-relaxed">
-                Site Reliability Engineer with <span className="text-neon-green">10+ years</span> of experience building,
-                maintaining, and optimizing large-scale <span className="text-neon-cyan">Linux</span> and{' '}
-                <span className="text-neon-cyan">Kubernetes</span> environments.
-              </p>
-              <p className="text-terminal-muted text-sm leading-relaxed">
-                Proven success in <span className="text-neon-green">automating infrastructure</span>, improving system{' '}
-                <span className="text-neon-amber">observability</span>, and maintaining production-grade{' '}
-                <span className="text-neon-green">reliability at scale</span>.
-              </p>
-              <div className="flex flex-wrap gap-4 pt-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-neon-green animate-pulse-glow" />
-                  <span className="text-xs text-terminal-muted">99.9% uptime delivered</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse-cyan" />
-                  <span className="text-xs text-terminal-muted">70% automation improvement</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-neon-amber" />
-                  <span className="text-xs text-terminal-muted">35% MTTR reduction</span>
-                </div>
-              </div>
-            </div>
-          </Terminal>
-        </div>
+            </dl>
+          </div>
+        </Reveal>
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default About;
